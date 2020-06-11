@@ -27,11 +27,11 @@ if ($_POST['func']=="post"){
 				<body>
 				Пользователь отправил заявку.<br>
 				------------------------------<br>
-				Пользователь: ".$_POST['fio']."<br>
-				E-mail: ".$_POST['email']."<br>
-				Дата: ".$_POST['date']."<br>
-				Время: ".$_POST['time']."<br>
-				Сообщение: ".$_POST['message']."<br>
+				Пользователь: <? echo $_POST['fio'] ?><br>
+				E-mail: <? echo $_POST['email'] ?><br>
+				Дата: <? echo $_POST['date'] ?><br>
+				Время: <? echo $_POST['time'] ?><br>
+				Сообщение: <? echo $_POST['message'] ?><br>
 				------------------------------<br>
 				С уважением, система.<br>
 				</body>
