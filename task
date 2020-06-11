@@ -1,0 +1,110 @@
+<?
+
+$adress="";
+
+mysql_connect($host, $user, $pasw);
+mysql_select_db($base) or die('Ошибка открытия базы.');
+mysql_set_charset('utf8');
+
+?>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<title>Тестовое задание</title>
+<meta name="description" content="..."/>
+<meta name="keywords" content="..."/>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<?
+	  
+if ($_POST['func']=="post"){
+
+	if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) !== false){
+	$subject = "Новая заявка";
+	$message = "<html>
+				<body>
+				Пользователь отправил заявку.<br>
+				------------------------------<br>
+				Пользователь: ".$_POST['fio']."<br>
+				E-mail: ".$_POST['email']."<br>
+				Дата: ".$_POST['date']."<br>
+				Время: ".$_POST['time']."<br>
+				Сообщение: ".$_POST['message']."<br>
+				------------------------------<br>
+				С уважением, система.<br>
+				</body>
+				</html>";
+	$headers  = "MIME-Version: 1.0" . "\r\n";
+	$headers .= "Content-type: text/html; charset=\"utf-8\"" . "\r\n";
+	$headers .= "From: Система <".$adress.">" . "\r\n";
+	mail($adress, $subject, $message, $headers, "-f$adress");
+	mysql_query('insert into t_mail (f_fio, f_mail, f_date, f_time, f_message) values ("'.$_POST['fio'].'","'.$_POST['email'].'","'.$_POST['date'].'","'.$_POST['time'].'","'.$_POST['message'].'")');
+	?>
+	<div class="ok">Сообщение отправлено.</div>
+	<?
+	unset($_POST['fio'],$_POST['email'],$_POST['date'],$_POST['time'],$_POST['message'],$border);
+	} else {
+	?>
+	<div class="err">Некорректный E-mail. Попробуйте еще раз.</div>
+	<?
+	$border='border:1px solid red;';
+	}
+
+	}
+	
+?>
+<div class="bold">Форма заявки:</div>
+<form method="post" action="/">
+<input type="hidden" name="func" value="post"> 
+<input name="fio" value="" type="text" placeholder="Имя" required><br>
+<input name="email" value="" type="text" style="<? echo $border ?>" placeholder="Email" required><br>
+<select name="date" required>
+<option class="empty" value="">Дата</option>
+<option value="Июль 1">Июль 1</option>
+<option value="Июль 2">Июль 2</option>
+<option value="...">...</option>
+</select><br>
+<select name="time" required>
+<option class="empty" value="">Время</option>
+<option value="10:00">10:00</option>
+<option value="11:00">11:00</option>
+<option value="...">...</option>
+</select><br>
+<textarea name="message" placeholder="Комментарий" required></textarea><br>
+<input type="submit" value="Отправить">
+</form>
+	  
+<div class="line"></div>
+
+<div class="bold ok">ЗАЯВКИ В БД.</div>
+<?
+
+$result=mysql_query('select * from t_mail order by f_id');
+if (mysql_numrows($result)==''){
+	?>
+	<div>Заявок в БД еще нет.</div>
+	<?
+} else {
+	for ($i=0; $i<mysql_numrows($result); $i++){
+	$f_id=mysql_result($result, $i, 'f_id');
+	$f_fio=mysql_result($result, $i, 'f_fio');
+	$f_mail=mysql_result($result, $i, 'f_mail');
+	$f_date=mysql_result($result, $i, 'f_date');
+	$f_time=mysql_result($result, $i, 'f_time');
+	$f_message=mysql_result($result, $i, 'f_message');
+	$q++;
+?>
+<div class="bold">Заявка: <? echo $q; ?></div>
+<div>Имя: <? echo $f_fio; ?></div>
+<div>Email: <? echo $f_mail; ?></div>
+<div>Дата: <? echo $f_date; ?></div>
+<div>Время: <? echo $f_time; ?></div>
+<div>Комментарий: <? echo $f_message; ?></div><br>
+<?
+	}
+}
+?>
+</body>
+</html>
