@@ -22,37 +22,37 @@ mysql_set_charset('utf8');
 if ($_POST['func']=="post"){
 
 	if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) !== false){
-	$subject = "Новая заявка";
-	$message = "<html>
-				<body>
-				Пользователь отправил заявку.<br>
-				------------------------------<br>
-				Пользователь: <? echo $_POST['fio'] ?><br>
-				E-mail: <? echo $_POST['email'] ?><br>
-				Дата: <? echo $_POST['date'] ?><br>
-				Время: <? echo $_POST['time'] ?><br>
-				Сообщение: <? echo $_POST['message'] ?><br>
-				------------------------------<br>
-				С уважением, система.<br>
-				</body>
-				</html>";
-	$headers  = "MIME-Version: 1.0" . "\r\n";
-	$headers .= "Content-type: text/html; charset=\"utf-8\"" . "\r\n";
-	$headers .= "From: Система <".$adress.">" . "\r\n";
-	mail($adress, $subject, $message, $headers, "-f$adress");
-	mysql_query('insert into t_mail (f_fio, f_mail, f_date, f_time, f_message) values ("'.$_POST['fio'].'","'.$_POST['email'].'","'.$_POST['date'].'","'.$_POST['time'].'","'.$_POST['message'].'")');
-	?>
-	<div class="ok">Сообщение отправлено.</div>
-	<?
-	unset($_POST['fio'],$_POST['email'],$_POST['date'],$_POST['time'],$_POST['message'],$border);
+		$subject = "Новая заявка";
+		$message = "<html>
+					<body>
+					Пользователь отправил заявку.<br>
+					------------------------------<br>
+					Пользователь: <? echo $_POST['fio'] ?><br>
+					E-mail: <? echo $_POST['email'] ?><br>
+					Дата: <? echo $_POST['date'] ?><br>
+					Время: <? echo $_POST['time'] ?><br>
+					Сообщение: <? echo $_POST['message'] ?><br>
+					------------------------------<br>
+					С уважением, система.<br>
+					</body>
+					</html>";
+		$headers  = "MIME-Version: 1.0" . "\r\n";
+		$headers .= "Content-type: text/html; charset=\"utf-8\"" . "\r\n";
+		$headers .= "From: Система <".$adress.">" . "\r\n";
+		mail($adress, $subject, $message, $headers, "-f$adress");
+		mysql_query('insert into t_mail (f_fio, f_mail, f_date, f_time, f_message) values ("'.$_POST['fio'].'","'.$_POST['email'].'","'.$_POST['date'].'","'.$_POST['time'].'","'.$_POST['message'].'")');
+		?>
+		<div class="ok">Сообщение отправлено.</div>
+		<?
+		unset($_POST['fio'],$_POST['email'],$_POST['date'],$_POST['time'],$_POST['message'],$border);
 	} else {
-	?>
-	<div class="err">Некорректный E-mail. Попробуйте еще раз.</div>
-	<?
-	$border='border:1px solid red;';
+		?>
+		<div class="err">Некорректный E-mail. Попробуйте еще раз.</div>
+		<?
+		$border='border:1px solid red;';
 	}
 
-	}
+}
 	
 ?>
 <div class="bold">Форма заявки:</div>
@@ -80,7 +80,6 @@ if ($_POST['func']=="post"){
 
 <div class="bold ok">ЗАЯВКИ В БД.</div>
 <?
-
 $result=mysql_query('select * from t_mail order by f_id');
 if (mysql_numrows($result)==''){
 	?>
